@@ -16,8 +16,33 @@
 
 \maketitle
 
-\section*{Questions}
-Chapter 1: Questions 2,6,8,9
-Chapter 2: Questions 1,2,3,4,5,6
+% Page 47
+\section*{Question 1.2}
+What is the difference between a system and a library call?
+
+\section*{Question 1.6}
+What are the advantages and disadvantages of integrating the user interface into the operating system?
+
+\section*{Question 1.8}
+Why are special instructions used to implement system calls? Why no use normal subroutine calling instructions?
+
+\section*{Question 1.9}
+Virtual machine OSs and systems like Xen are often used to run multiple copies of the same guest OS.
+What are some advantages of this approach over running a single copy of the guest OS directly on the hardware?
+
+% Page 61
+\section*{Question 2.1}
+Why did the designers of CTSS design the system to allow FMS to run as a normal job?
+\section*{Question 2.2}
+What is the advantage of implementing an operating system in a high-level language (like PL/I in Multics) over implementing it in assembly?
+\section*{Question 2.3}
+What are the advantages and disadvantages of implementing libraries using a call gate (or other system call-like mechanisms) as in Multics?
+\section*{Question 2.4}
+Throughout this chapter, we have seen the trend in writing operating systems shift from assembly language to higher-level languages.
+We have also seen a shift from operating systems written from a single type of machine to ones that are ported to a variety of different machines. In what ways are these two trends connected?
+\section*{Question 2.5}
+In RT-11 why not just run the foreground-background (FB) monitor even if there is only one job to run instead of using a special single job (SJ) monitor?
+\section*{Question 2.6}
+On the VAX, 4.3BSD and VMS both use special instructions to change the processor mode in the system call mechanism. In 4.3BSD, these instructions are executed in normal user code, while in VMS they are executed in the kernel. What are the considerations in choosing one scheme over the other?
 
 \end{document}
