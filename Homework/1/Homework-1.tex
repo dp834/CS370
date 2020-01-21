@@ -44,41 +44,62 @@ What are some advantages of this approach over running a single copy of the gues
 Allows for multiple users to think they have a full system to themselves without needing multiple systems.
 Failures in one OS due to some reason can be isolated from the rest of the system.
 
-% Page 61
-\section*{Question 2.1}
-Why did the designers of CTSS design the system to allow FMS to run as a normal job?
+\section*{Question 3.1}
+Figure 3-2 doesn't show file system support anywhere.
+Why not?
+How are file systems handled in hosted Inferno?
+In native Inferno?
 \\
-Running the FMS as a normal job on the OS allowed the system to be used as it was previously, as a batch system for backwards compatibility, while also the other time sharing applications to run.
+The file system is not shown as it is a Limbo Module and not built into the kernel, it would fall under the top layer if explicitly listed.
+Both are done via the Styx protocol which when the user application that is the file server asks for info will get sent to the kernel.
+Depending on if the kernel is being run natively or hosted it will ask the appropriate device for file information.
+Native will ask drives for info while hosted will ask the host operating system for the info which will in turn ask the drives themselves.
+This allows for the file system to be unaware of if it is being run on a hosted or native version of Inferno or if the file is even located on its own drives.
 
-\section*{Question 2.2}
-What is the advantage of implementing an operating system in a high-level language (like PL/I in Multics) over implementing it in assembly?
+\section*{Question 3.2}
+Inferno doesn't use a software interrupt instruction to initiate system calls.
+Would it be feasible to use such an instruction for Inferno running natively?
+For Inferno running hosted by another OS?
 \\
-Higher level languages allow for easier maintainability and faster development in comparison to assembly.
+Because all the code running on Inferno is Dis code any interrupt that would trigger would have to be triggered by the Dis interpreter.
+Rather than have the Dis interpreter trigger a interrupt for a different part of the Kernel to handle it handles it itself.
+Adding software interrupts for one part of the Kernel to call a different part of the Kernel would just add complexity where it is not needed.
 
-\section*{Question 2.3}
-What are the advantages and disadvantages of implementing libraries using a call gate (or other system call-like mechanisms) as in Multics?
+\section*{Question 3.3}
+How many lines of code are contained in each of the directories discussed in Section 3.3.2?
 \\
-Advantages: Having a uniform system reduces the complexity of the calling structure.
-Disadvantages: Every call to a lower layer or library has to transfer control to another process.
+find \$FOLDER/ -name "*.*" | xargs wc -l \\
+In emu:         60976   Lines   \\
+In os:          304798  Lines   \\
+In lib9:        7642    Lines   \\
+In libdraw:     4270    Lines   \\
+In libfreetype: 99483   Lines   \\
+In libinterp:   34613   Lines   \\
+In libkeyring:  781     Lines   \\
+In libmath:     9239    Lines   \\
+In libmemdraw:  6596    Lines   \\
+In libmemlayer: 1213    Lines   \\
+In libtk:       29525   Lines   \\
 
-\section*{Question 2.4}
-Throughout this chapter, we have seen the trend in writing operating systems shift from assembly language to higher-level languages.
-We have also seen a shift from operating systems written from a single type of machine to ones that are ported to a variety of different machines. In what ways are these two trends connected?
+\section*{Question 3.4}
+Inferno does not have the notion of a superuser or other privileged user.
+Compare and contrast the role of \emph{eve} to that of a superuser.
 \\
-Both of these are working towards code reuse on multiple platforms so that the operating system could be reused.
-Instead of making a new operating system for each computer the same OS could be compiled down to the appropriate machine code for the system given the correct compiler.
+A superuser has access to do anything to the system while the user with the role \emph{eve} is marked as the owner of the system devices/processes.
+%IDK
 
-\section*{Question 2.5}
-In RT-11 why not just run the foreground-background (FB) monitor even if there is only one job to run instead of using a special single job (SJ) monitor?
+\section*{Question 3.5}
+In many time-sharing operating systems (including UNIX), hardware is owned by a superuser or other administrative user.
+Yet the same people who developed UNIX chose to make such things owned by the logged-in user in Inferno.
+Why did they use a different approach with Inferno?
 \\
-Time slicing can reduce performance if you know that you are only going to be running on process.
+There was a shift in the ways that computers were being used, before Inferno it was one powerful system being shared by many users.
+When Inferno was being developed users now had their own computers, and more people would be their own "administrator" for their local machines.
 
-\section*{Question 2.6}
-On the VAX, 4.3BSD and VMS both use special instructions to change the processor mode in the system call mechanism. In 4.3BSD, these instructions are executed in normal user code, while in VMS they are executed in the kernel. What are the considerations in choosing one scheme over the other?
+\section*{Question 3.6}
+Is it possible that we could fail to open all three initial file descriptors in \emph{emuinit}() but not print the error message? How?
 \\
-Called in Normal mode: Kernel has to determine which function to run based on user set information.
-Seems like it could be taken advantage of by malicious programmers.
-\\
-Called in Kernel mode: No special command to run from programmer prospective as it is wrapped inside a normal function call.
+No as if the first one were to fail to open all of them then we would have to fail the first.
+If the first open fails then it would return a minus -1 (in \emph{kopen}) which is not zero so the error message will print.
 
 \end{document}
