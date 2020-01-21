@@ -9,7 +9,7 @@
 }
 
 \author{Damien Prieur}
-\title{Homework 1 \\ CS 435}
+\title{Homework 1 \\ CS 370}
 \date{}
 
 \begin{document}
@@ -28,14 +28,17 @@ A system call will also give control of the program over to the operating system
 What are the advantages and disadvantages of integrating the user interface into the operating system?
 \\
 Advantages: Gives a user interface that can make it easier to use.
+Provides a consistent theme for programmers to use.
 \\
-Disadvantages: Leads to a larger OS/kernel.
+Disadvantages: Leads to a larger/more complicated OS/kernel.
 
 \section*{Question 1.8}
-Why are special instructions used to implement system calls? Why no use normal subroutine calling instructions?
+Why are special instructions used to implement system calls? Why not use normal subroutine calling instructions?
 \\
-System calls are executed by the operating system with higher privileges so that it can interact with the physical hardware.
-Normal user processes cannot access these operations so they must go through the system call process.
+The process needs to have it's control transferred to the operating so that things can be run in a privileged mode.
+Normal subroutines do not transfer control to another process but instead run the code in the current calling process.
+%System calls are executed by the operating system with higher privileges so that it can interact with the physical hardware.
+%Normal user processes cannot access these operations so they must go through the system call process and transfer control of the program.
 
 \section*{Question 1.9}
 Virtual machine OSs and systems like Xen are often used to run multiple copies of the same guest OS.
