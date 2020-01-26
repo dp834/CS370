@@ -31,11 +31,15 @@ uvlong	gcidlepass;
 uvlong	gcpartial;
 int keepbroken = 1;
 extern int	vflag;
+extern ulong	kerndate;
 static Prog*	proghash[64];
 
 static Progs*	delgrp(Prog*);
 static void	addgrp(Prog*, Prog*);
 void	printgrp(Prog*, char*);
+void    printhostowner(void);
+void    printdate(void);
+int     dysize(int);
 
 static Prog**
 pidlook(int pid)
@@ -1091,6 +1095,9 @@ disinit(void *a)
 	if(waserror())
 		panic("disinit error: %r");
 
+    printhostowner();
+    printdate();
+
 	if(vflag)
 		print("Initial Dis: \"%s\"\n", initmod);
 
@@ -1138,4 +1145,109 @@ pushrun(Prog *p)
 	isched.runhd = p;
 	if(p->link == nil)
 		isched.runtl = p;
+}
+
+void
+printhostowner(void)
+{
+    print("Host owner %s\n", eve);
+}
+
+void
+printdate(void)
+{
+    /* Easiest way to do this */
+    /* print("Kernel build time %s %s\n", __DATE__, __TIME__); */
+
+    // Following program in appl/lib/daytime.b
+
+    int wday, month, day, hour, min, sec, year;
+    int hms, d1, d0;
+    int *dmsz;
+    char *zone = "EST";
+
+    char *wkday_str[] = {
+	    "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"
+    };
+
+    char *month_str[] = {
+	    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+	    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    };
+
+    int *dmsize = {
+       31, 28, 31, 30, 31, 30,
+       31, 31, 30, 31, 30, 31
+    };
+    int *ldmsize = {
+        31, 29, 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31
+    };
+
+    ulong time = kerndate + 0; /* add offset for EST timezone */
+
+    /* break initial number into days */
+    hms = time %86400
+    day = time / 86400;
+    if(hms < 0){
+        hms += 86400;
+        day -= 1;
+    }
+
+    /* generate hours:minutes:seconds */
+
+    sec = hms % 60;
+    d1  = hms / 60;
+    min = d1 % 60;
+    d1 /= 60;
+    hour = d1;
+
+    /* day is the day number.
+     * generate day of the week
+     * the addend is 4 mod 7 (1/1/1970 was Thursday) */
+    wday = (day + 7340036) % 7;
+    
+    /* year number */
+    if( day >= 0){
+        for(d1 = 70; day >= dysize(d1+1900); d1++){
+            day -= dysize(d1+1900);
+        }
+    }else{
+        for(d1 = 70; day < 0; d1--){
+            day += dysize(d1+1900-1);
+        }
+    }
+
+    year = d1;
+    d0 = day;
+
+    /* generate month */
+    if(dysize(d1+1900) == 366){
+        dmsz = ldmsize;
+    }else{
+        dmsz = dmsize;
+    }
+    for(d1 = 0; d0 > dmsz[d1]; d1++){
+        d0 -= dmsz[d1];
+    }
+    mday = d0 + 1;
+    month = d1;
+
+    print("%s %s %.2d %.2d:%.2d:%.2d %s %d\n"
+    wkday_str[wday],
+    month_str[month],
+    day,
+    hour,
+    min,
+    sec,
+    zone,
+    year);
+}
+
+int
+dysize(int y){
+    if(y%4 == 0 && (y%100 != 0 || y%400 == 0)){
+        return 366;
+    }
+    return 365;
 }
