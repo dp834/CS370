@@ -1175,19 +1175,19 @@ printdate(void)
 	    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     };
 
-    int *dmsize = {
+    int dmsize[] = {
        31, 28, 31, 30, 31, 30,
        31, 31, 30, 31, 30, 31
     };
-    int *ldmsize = {
+    int ldmsize[] = {
         31, 29, 31, 30, 31, 30,
         31, 31, 30, 31, 30, 31
     };
 
-    ulong time = kerndate + 0; /* add offset for EST timezone */
+    ulong time = kerndate + (-5 * 60 * 60); /* add offset for EST timezone */
 
     /* break initial number into days */
-    hms = time %86400
+    hms = time % 86400;
     day = time / 86400;
     if(hms < 0){
         hms += 86400;
@@ -1230,10 +1230,10 @@ printdate(void)
     for(d1 = 0; d0 > dmsz[d1]; d1++){
         d0 -= dmsz[d1];
     }
-    mday = d0 + 1;
+    day = d0 + 1;
     month = d1;
 
-    print("%s %s %.2d %.2d:%.2d:%.2d %s %d\n"
+    print("%s %s %.2d %.2d:%.2d:%.2d %s %d\n",
     wkday_str[wday],
     month_str[month],
     day,
@@ -1241,7 +1241,7 @@ printdate(void)
     min,
     sec,
     zone,
-    year);
+    year + 1900);
 }
 
 int
