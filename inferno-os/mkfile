@@ -59,6 +59,21 @@ kernelinstallall:V:	kernel/installall-$HOSTMODEL
 kernelnuke:V:	kernel/nuke-$HOSTMODEL
 nuke:V:		nuke-$HOSTMODEL
 
+cscope:V:
+#        -path ./os/"*" # swap with emu if if running native not virtual
+	rm cscope.files
+    find \
+        $SYSTARG/$OBJTYPE/include \
+        include	\
+        emu/$SYSTARG \
+		emu/port \
+        lib* \
+        limbo \
+        tools \
+        utils \
+        -name "*.[chxsS]" -print > cscope.files
+	cscope -bkq -icscope.files
+
 cleandist:V: clean
 	rm -f $ROOT/$OBJDIR/lib/lib*.a
 
