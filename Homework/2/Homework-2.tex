@@ -1,0 +1,81 @@
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+
+\lstset{
+    basicstyle=\ttfamily,
+    mathescape
+}
+
+\author{Damien Prieur}
+\title{Homework 2 \\ CS 370}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% Exercises: Page 147
+\section*{Question 5.1}
+If a compute-bound process (it never does I/O) takes $T$ seconds to run, will the time taken for n such processes be less than, equal to, or greater than $nT$ on a realistic system that does round robin scheduling? Why?
+\newline
+It will take longer than $nT$ seconds to run do to process scheduling and switching between processes.
+Each time the scheduler switches to a different process all the data associated with that process must be saved and the next process must be loaded in which takes extra time.
+
+\section*{Question 5.5}
+Describe how disabling interrupts prevents two processes from entering the critical section at the same time.
+\newline
+If a process disabled interrupts then it would be unable to be preempted by the operating system.
+If the OS can't change the currently running process then the process knows that no other program can be in the critical section at the same time.
+
+\section*{Question 5.6}
+Suppose a batch of jobs is submitted, and they are identified as taking 100,30,20,240, and 120 seconds, respectively.
+Assume that they have arrived in the order given but that there is no time between their arrivals.
+What is the average turnaround time for first-come, first-served scheduling?
+What is it for shortest job first?
+\newline
+First-come:
+Turnaround times: 100s, 130s, 150s, 390s, 510s \\
+Average $= \frac{1280s}{5} = 256s$ \\
+Shortest-job:
+Turnaround times: 20s, 50s, 150s, 270s, 510s \\
+Average $= \frac{1000s}{5} = 200s$ \\
+
+% Page 120
+\section*{Question 5.9}
+Suppose we have a multilevel feedback queue such as the one illustrated in Figure 5-5 with three processes, $a$, $b$, and $c$, where each has a base priority of 1 and where each process moves down one level on completing a time slice.
+Let $p(a)$ be boosted to 4, $p(b)$ to 3, and $p(c)$ to 2.
+How many time slices will expire before all three processes are back to their base priority?
+How many will each process get in the process.
+\newline
+
+\section*{Question 5.13}
+Show that an atomic exchange (between a register and a memory location) instruction can be used to implement a lock equivalent to the one implemented with the $tas$ instruction.
+\newline
+
+
+\section*{Question 5.15}
+Suppose we adjust a process's priority by $p' = \alpha p$ for each time slice where it is running and by $p' = 1 - \alpha (1-p)$ when it is blocked.
+(There is no change for processes that are ready but not running.)
+If $0<p<1$ and $0<\alpha<1$, is it possible for a ready process to ever starve? Why or why not?
+\newline
+
+
+% Page 143
+\section*{Question 5.21}
+Why can the line in a trajectory such as the one exemplified in Figure 5-10 never move to the left or down?
+\newline
+The amount of time a process has used the CPU cannot go down, once that time has been used it is not given back and therefore cannot move left or down in Figure 5-10.
+
+% Exercises: Page 192
+\section*{Question 7.2}
+In the per-instruction loop of $xec()$, why can't we call the instruction execution function with the following line? $optab[R.PC->op]();$
+
+\section*{Question 7.4}
+In the infinite scheduling loop of $vmachine()$, we check only the $vmq$ list to see if there are any processes on it. Why do we not also look at the $idlevmq$ list?
+
+\section*{Question 7.5}
+Why do you suppose that the $isched$ structure has a pointer to the tail of the $vmq$ list and not to the tail of the $idlevmq$ list
+
+\end{document}
