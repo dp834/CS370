@@ -20,11 +20,13 @@
 \section*{Question 5.1}
 If a compute-bound process (it never does I/O) takes $T$ seconds to run, will the time taken for n such processes be less than, equal to, or greater than $nT$ on a realistic system that does round robin scheduling? Why?
 \newline
+\newline
 It will take longer than $nT$ seconds to run do to process scheduling and switching between processes.
 Each time the scheduler switches to a different process all the data associated with that process must be saved and the next process must be loaded in which takes extra time.
 
 \section*{Question 5.5}
 Describe how disabling interrupts prevents two processes from entering the critical section at the same time.
+\newline
 \newline
 If a process disabled interrupts then it would be unable to be preempted by the operating system.
 If the OS can't change the currently running process then the process knows that no other program can be in the critical section at the same time.
@@ -34,6 +36,7 @@ Suppose a batch of jobs is submitted, and they are identified as taking 100,30,2
 Assume that they have arrived in the order given but that there is no time between their arrivals.
 What is the average turnaround time for first-come, first-served scheduling?
 What is it for shortest job first?
+\newline
 \newline
 First-come:
 Turnaround times: 100s, 130s, 150s, 390s, 510s \\
@@ -49,10 +52,29 @@ Let $p(a)$ be boosted to 4, $p(b)$ to 3, and $p(c)$ to 2.
 How many time slices will expire before all three processes are back to their base priority?
 How many will each process get in the process.
 \newline
+\newline
+\begin{enumerate}
+\item 1: \{\} 2: \{c\} 3: \{b\} 4: \{a\}
+\item 1: \{\} 2: \{c\} 3: \{b,a\} 4: \{\}
+\item 1: \{\} 2: \{c,b\} 3: \{a\} 4: \{\}
+\item 1: \{\} 2: \{c,b,a\} 3: \{\} 4: \{\}
+\item 1: \{c\} 2: \{b,a\} 3: \{\} 4: \{\}
+\item 1: \{c,b\} 2: \{\} 3: \{\} 4: \{\}
+\item 1: \{c,b,a\} 2: \{\} 3: \{\} 4: \{\}
+\end{enumerate}
+6 time slices will elapse before all three processes are back to priority 1.\\
+Process $a = 3$ time slices \\
+Process $b = 2$ time slices \\
+Process $c = 1$ time slices \\
 
 \section*{Question 5.13}
 Show that an atomic exchange (between a register and a memory location) instruction can be used to implement a lock equivalent to the one implemented with the $tas$ instruction.
 \newline
+\newline
+If you have a memory location that represents the lock and is initialized to 1 then when a program wants to gain access to the lock it can run the atomic exchange between a register that contains 0 and the lock variable.
+If the register now contains a 1 then you have successfully gained the lock, if the register still contains a zero then some other process has the lock to that resource.
+You can then use this to implement a spin lock just as with the $tas$ instruction.
+In order to release the lock you run the atomic instruction with a register that has a 1 in it signaling that the lock can one again be claimed.
 
 
 \section*{Question 5.15}
@@ -60,22 +82,38 @@ Suppose we adjust a process's priority by $p' = \alpha p$ for each time slice wh
 (There is no change for processes that are ready but not running.)
 If $0<p<1$ and $0<\alpha<1$, is it possible for a ready process to ever starve? Why or why not?
 \newline
+\newline
 
 
 % Page 143
 \section*{Question 5.21}
 Why can the line in a trajectory such as the one exemplified in Figure 5-10 never move to the left or down?
 \newline
+\newline
 The amount of time a process has used the CPU cannot go down, once that time has been used it is not given back and therefore cannot move left or down in Figure 5-10.
 
 % Exercises: Page 192
 \section*{Question 7.2}
 In the per-instruction loop of $xec()$, why can't we call the instruction execution function with the following line? $optab[R.PC->op]();$
+\newline
+\newline
+When the program is executing the instruction it expects that the value of $R.PC->op$ is pointing at the new value.
+Running the execution with this modification would change what value $R.PC->op$ points to which would now point to the current instruction instead of the next instruction. This could lead to issues with branches or setting return values.
 
 \section*{Question 7.4}
 In the infinite scheduling loop of $vmachine()$, we check only the $vmq$ list to see if there are any processes on it. Why do we not also look at the $idlevmq$ list?
+\newline
+\newline
+The $vmq$ list contains the list of processes that are in the ready state which are ready to run. The $idlevmq$ list contains interpreters that are ready to receive a process but do not currently have any work to do. When an interpreter gets some process to run it will enter the ready state and be placed on the $vmq$ list.
+
 
 \section*{Question 7.5}
 Why do you suppose that the $isched$ structure has a pointer to the tail of the $vmq$ list and not to the tail of the $idlevmq$ list
+\newline
+\newline
+When moving interpreters to the $vmq$ list they are added to the tail so they get executed in order, in this case the order of the list matters.
+In the case of the $idlevmq$ list these are just available interpreters and when one is needed it doesn't matter which one gets chosen so you don't need access to both ends of the list.
+Instead you just use it as a LIFO queue.
 
 \end{document}
+If you have a memory location that represents the lock and is initialized to 1 then when a program wants to gain access to the lock it can run the atomic exchange between a register that contains 0 and the lock variable. If the register now contains a 1 then you have sucessfully gained the lock, if the register still contains a zero then some other process has the lock to that resource. You can then use this to implement a spin lock just as with the $tas$ instruction.
