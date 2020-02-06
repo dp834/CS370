@@ -162,7 +162,12 @@ newprog(Prog *p, Modlink *m)
 
 	n->osenv = (Osenv*)((uchar*)n + sizeof(Prog));
 	n->xec = xec;
-	n->quanta = PQUANTA;
+    /* if no parent process */
+    if(p == nil){
+	    n->quanta = PQUANTA;
+    }else{
+        n->quanta = p->quanta;
+    }
 	n->flags = 0;
 	n->exval = H;
 
@@ -1065,6 +1070,14 @@ vmachine(void *a)
 			if(isched.runhd != nil)
 			if(r == isched.runhd)
 			if(isched.runhd != isched.runtl) {
+                /* Used full timeslice, increase quanta by 1.5 within reason */
+                if(r->ticks == r->quanta && r->pid != 1){
+                    r->quanta += r->quanta/2;
+                    if(r->quanta > PQUANTA_MAX){
+                        r->quanta = PQUANTA_MAX;
+                    }
+                }
+
 				isched.runhd = r->link;
 				r->link = nil;
 				isched.runtl->link = r;

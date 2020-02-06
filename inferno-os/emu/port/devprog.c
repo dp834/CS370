@@ -26,6 +26,7 @@ enum
 	Qwait,
 	Qfd,
 	Qexception,
+    Qquanta,
 };
 
 /*
@@ -45,6 +46,7 @@ Dirtab progdir[] =
 	"wait",		{Qwait},	0,			0400,
 	"fd",		{Qfd},		0,			0400,
 	"exception",	{Qexception},	0,	0400,
+	"quanta",   {Qquanta},	0,	        0600,
 };
 
 enum
@@ -280,6 +282,7 @@ progopen(Chan *c, int omode)
 	case Qctl:
 	case Qfd:
 	case Qexception:
+    case Qquanta:
 		break;
 	case Qwait:
 		c->aux = qopen(1024, Qmsg, nil, nil);
@@ -974,6 +977,17 @@ progread(Chan *c, void *va, long n, vlong offset)
 			snprint(up->genbuf, sizeof(up->genbuf), p->exstr);
 		release();
 		return readstr(offset, va, n, up->genbuf);
+    case Qquanta:
+        acquire();
+		p = progpid(PID(c->qid));
+		if(p == nil) {
+			release();
+            error(Ethread);
+		}
+	    i = snprint(a, n, "%d\n", p->quanta);
+        offset = progoffset(offset, a,&i);
+		release();
+        return i;
 	}
 	error(Egreg);
 	return 0;
@@ -1026,6 +1040,7 @@ progwrite(Chan *c, void *va, long n, vlong offset)
 	int i, pc;
 	Cmdbuf *cb;
 	Cmdtab *ct;
+    ulong q;
 
 	USED(offset);
 	USED(va);
@@ -1157,6 +1172,30 @@ progwrite(Chan *c, void *va, long n, vlong offset)
 		hq->fmt = *b++;
 		hq->count = strtoul(b, nil, 0);
 		break;
+    case Qquanta:
+        cb = parsecmd(va, n);
+
+        if(waserror()){
+            free(cb);
+            nexterror();
+        }
+
+        /* if more or less than 1 argument is passed do nothing, notify in some way?? */
+        if(cb->nf != 1){
+            error(Ebadarg);
+        }
+
+		q = strtoul(cb->f[0], nil, 10);
+
+        if(q < PQUANTA_MIN || q >  PQUANTA_MAX){
+            error(Ebadarg);
+        }
+
+        p->quanta = (int)q;
+
+        poperror();
+        free(cb);
+        break;
 	default:
 		print("unknown qid in procwrite\n");
 		error(Egreg);

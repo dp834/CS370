@@ -1672,6 +1672,7 @@ xec(Prog *p)
 {
 	int op;
 
+    p->ticks = 0;
 	R = p->R;
 	R.MP = R.M->MP;
 	R.IC = p->quanta;
@@ -1692,6 +1693,7 @@ xec(Prog *p)
 		op = R.PC->op;
 		R.PC++;
 		optab[op]();
+        p->ticks++;
 	} while(--R.IC != 0);
 
 	p->R = R;

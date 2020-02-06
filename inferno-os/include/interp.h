@@ -26,6 +26,8 @@ enum
 	PRNSIZE	= 1024,
 	BIHASH	= 23,
 	PQUANTA	= 2048,	/* prog time slice */
+    PQUANTA_MAX = 128*PQUANTA,
+    PQUANTA_MIN = 32,
 
 	/* STRUCTALIGN is the unit to which the compiler aligns structs. */
 	/* It really should be defined somewhere else */
