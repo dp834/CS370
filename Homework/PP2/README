@@ -1,0 +1,21 @@
+Testing procedure:
+
+Run test1 in the background with default parent quanta.
+Set quanta of prog/1/ to some value.
+Run "time fib" which will inherit new value from prog/1
+Compare "time fib" across different quanta variations.
+
+Findings:
+If the quanta's match then timing was pretty consistent.
+If test1 quanta was decently larger than fib then fib ran slower.
+If fib quanta was decently larger than test1 then fib ran quicker.
+
+So if a process has a larger relative quanta compared to all other processes then it will run "faster" than if it had the same quanta as everything else.
+
+
+Files modified:
+
+emu/port/devprog.c
+emu/port/dis.c
+include/interp.h
+libinterp/xec.c
