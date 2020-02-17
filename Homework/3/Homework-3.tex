@@ -1,0 +1,64 @@
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+
+\lstset{
+    basicstyle=\ttfamily,
+    mathescape
+}
+
+\author{Damien Prieur}
+\title{Homework 3 \\ CS 370}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% Exercises: Page 259
+\section*{Question 9.1}
+Suppose we have a hardware segmentation system like that shown in Figure 9-3 where the base and limit tables have eight entries.
+Base register $i$ (numbered from 0) contains the value $i\times 2^{10} + 0\text{x}100$ and each limit register contains the hexadecimal value $0\text{x}200$.
+If the 16-bit virtual address is $0\text{x}605\teax{f}$, then what physical address is computed?
+Does the address generate a fault?
+
+\section*{Question 9.6}
+Consider a system with 64-bit addressing. If the page size is 64 KB, how many levels must the paging system have so that each table fits within one page? (Take the PTE size to be 8 bytes.)
+
+\section*{Question 9.7}
+If we have a machine with a 32-bit virtual address and a 1-KB page size, then how many pages are in the virtual address space?
+If each PTE takes 4 bytes, then how many pages are required to hold a complete page table?
+If the physical address space is 256 MB, then how many bits are needed for the page frame number (PFN) in the PTE?
+
+\section*{Question 9.11}
+Most of the examples we have studied use the paging system to map a large virtual address space onto a smaller physical space.
+Could it be useful to map a small virtual space to a larger physical space?
+Why or why not?
+
+\section*{Question 9.12}
+Does using paged memory management hardware have any value even if we never swap pages to disk and back?
+
+\section*{Question 9.14}
+If memory access time is 70 nS and disk access time is 12 mS, then what is the maximum fraction of memory accesses that can generate page faults and maintain an expected memory access time of no more than 100nS?
+
+\section*{Question 9.16}
+Suppose that for a given ob, Belady's min would result in a $99.99\%$ hit rate, that memory access time is 70 nS, and that disk access time is 12mS.
+If NFU results in $20\%$ more page faults than Belady's min, and second chance results in $30\%$ more than Belady's min, how much is the average access time degraded for each of these page replacement policies?
+
+\section*{Question 9.19}
+Most systems don't swap out pages that are part of a read-only text segment because they can be reread from the original executable file.
+Would there be any advantage to doing so?
+
+% Exercises: Page 307
+\section*{Question 11.2}
+What constrains the value of the quanta member of the \bold{Pool} structure? Could we make it smaller than 31?
+If so, how small?
+If not, why not?
+
+\section*{Question 11.4}
+When adding a block back to the free tree for a pool, we check to see if adjacent blocks are also free and coalesce them if they are.
+Is it possible that we might accidentally coalesce free blocks belonging to different pools in this way?
+Why or why not?
+
+\end{document}
