@@ -1,0 +1,10 @@
+Removed all references to the tree of free memory in alloc.c
+Then went through function by function and reimplemented the logic for a linked list.
+After making it compile for the first time I had to trace through my code to find bugs which I did by adding prints for functions and seeing which function it was seg faulting on.
+After getting inferno to boot completely I ran some limbo programs to make sure things were still functioning as well as large array allocations.
+Everything seemed to be functioning as before so I assume that all the changes worked.
+
+
+Files modified:
+emu/port/alloc.c
+include/pool.h
