@@ -1,0 +1,76 @@
+\documentclass{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+
+\lstset{
+    basicstyle=\ttfamily,
+    mathescape
+}
+
+\author{Damien Prieur}
+\title{Homework 4 \\ CS 370}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% Exercises: Page 359 (331)
+\section*{Question 13.2}
+Consider an RS-232 controller with no interrupt capability.
+If we are to support a 19,200 bps data rate with seven data bits, even parity, and one stop bit, how often should we poll the controller?
+If each polling operation takes 200 $\mu$S, what fraction of the system's time is spent polling?
+\newline
+
+\section*{Question 13.4}
+When using DMA, does the device driver still need an interrupt handler?
+Why or why not?
+If yes, then what are the differences between an interrupt handler for a controller that uses DMA and a handler for on that doesn't?
+\newline
+
+\section*{Question 13.6}
+If an Ethernet controller does not use DMA but generates an interrupt for every byte, and if each interrupt takes 10 $\mu$S to process, then can the system effectively use the 10 Mbit/S data rate?
+Why or why not?
+\newline
+
+\section*{Question 13.8}
+What is the benefit of using the elevator algorithm?
+How does it accomplish this?
+\newline
+
+% Exercises: Page 397 (369)
+\section*{Question 15.2}
+In the extended binary coded decimal interchange code (EBCDIC), the letters are not contiguous
+(for example, there are character values between the letters "i" and "j").
+However, the difference between an uppercase letter and the corresponding lowercase one is still a constant.
+What technique for handling the Caps Lock, used in $i8042intr$(), still work for EBCDIC?
+Why or why not?
+\newline
+No since for values that are between letters they would get converted to their "Uppercase" variant which wouldn't make sense.
+(I think need to look at code again)
+
+\section*{Question 15.6}
+In $outch$(), while waiting for the port to become ready, we don't enable interrupts for the first 10 tries at 1 mS each.
+Why not just start directly sleeping 100 mS at a time and let an interrupt wake us up?
+\newline
+
+% Exercises: Page
+\section*{Question 17.4}
+Is it necessary to provide both absolute and relative position seeking service?
+Why or why not?
+\newline
+
+\section*{Question 17.7}
+What are the advantages and disadvantages of using a double-indirect pointer over multiple single-indirect pointers?
+\newline
+
+\section*{Question 17.9}
+If we have a three-level tree-structured allocation structure as in Figure 17-8, where each block is 1024 bytes and each block pointer is 4 bytes, how large is the largest file that can be represented?
+\newline
+
+\section*{Question 17.11}
+Describe how symbolic links could be implemented?
+\newline
+
+\end{document}
