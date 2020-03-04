@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
+\usepackage{amsmath}
 
 \lstset{
     basicstyle=\ttfamily,
@@ -22,55 +23,81 @@ Consider an RS-232 controller with no interrupt capability.
 If we are to support a 19,200 bps data rate with seven data bits, even parity, and one stop bit, how often should we poll the controller?
 If each polling operation takes 200 $\mu$S, what fraction of the system's time is spent polling?
 \newline
+$$ \frac{9\text{bits}}{19200\text{bps}} = .00046875s \approx 470ms \quad \text{per transaction} $$
+We need to pull at least every $460$ms to ensure the controller can send as much data as it needs.
+$$ \frac{.000200ms}{.470} \approx .0426\text{\%} $$
+About $.0426$\% of the time is spent polling?
 
 \section*{Question 13.4}
 When using DMA, does the device driver still need an interrupt handler?
 Why or why not?
 If yes, then what are the differences between an interrupt handler for a controller that uses DMA and a handler for on that doesn't?
 \newline
+No, all the control signals are communicated via memory in the DMA.
 
 \section*{Question 13.6}
 If an Ethernet controller does not use DMA but generates an interrupt for every byte, and if each interrupt takes 10 $\mu$S to process, then can the system effectively use the 10 Mbit/S data rate?
 Why or why not?
 \newline
+$$\frac{10Mbits/S}{8bits} = 1.25\times 10^{6}Hz $$
+If the controller was using every bit in the 10Mbit/S rate then we would have the cpu interrupt taking this fraction
+$$1.25\times 10^{6}Hz * 10 \times 10^{-6} = 12.5 >1 $$
+The cpu would have to spend more time polling than it has so it would be unable to use the full speed of the controller.
 
 \section*{Question 13.8}
 What is the benefit of using the elevator algorithm?
 How does it accomplish this?
 \newline
+Accesses to the disk cause the head to move which takes quite a bit of time, and moving the head quickly is difficult due to inertia and other factors.
+Due to this we want to minimize the amount of movement that the head has to make when searching on the disk.
+The elevator algorithm attempts to solve this by reordering the requests in such a way that the head is moving in one direction for as long as possible.
+This will reduce the amount of time the head has to change directions which is a large slowdown for the disk read speeds.
 
 % Exercises: Page 397 (369)
 \section*{Question 15.2}
 In the extended binary coded decimal interchange code (EBCDIC), the letters are not contiguous
 (for example, there are character values between the letters "i" and "j").
 However, the difference between an uppercase letter and the corresponding lowercase one is still a constant.
-What technique for handling the Caps Lock, used in $i8042intr$(), still work for EBCDIC?
+Would the technique for handling the Caps Lock, used in $i8042intr$(), still work for EBCDIC?
 Why or why not?
 \newline
 No since for values that are between letters they would get converted to their "Uppercase" variant which wouldn't make sense.
-(I think need to look at code again)
 
 \section*{Question 15.6}
 In $outch$(), while waiting for the port to become ready, we don't enable interrupts for the first 10 tries at 1 mS each.
 Why not just start directly sleeping 100 mS at a time and let an interrupt wake us up?
 \newline
+We still want to poll status if something happens and the printer is ready.
+If the printer in the 10 mS then it's probably busy so then we wait longer to give it a chance to finish what it's doing.
+We don't want to wait the full 100 mS if the printer is just finishing an operation we gave it.
 
-% Exercises: Page
+% Exercises: Page 452 (424)
 \section*{Question 17.4}
 Is it necessary to provide both absolute and relative position seeking service?
 Why or why not?
 \newline
+It is not necessary for the os to provide as given one the application can emulate the other.
+Providing both allows for the application to use whichever is more convenient for them.
 
 \section*{Question 17.7}
 What are the advantages and disadvantages of using a double-indirect pointer over multiple single-indirect pointers?
 \newline
+By using double-indirect pointers there is only one block to start at instead of having to maintain a list that needs it's own structure.
+It also allows for expandability without much change by adding a new layer on top if the max size file needs to grow in the future.
+Double-indirect pointers can be excessive for smaller files since you need to perform 3 reads before getting the block of data on the 4th read.
 
 \section*{Question 17.9}
 If we have a three-level tree-structured allocation structure as in Figure 17-8, where each block is 1024 bytes and each block pointer is 4 bytes, how large is the largest file that can be represented?
 \newline
+$$ \frac{1024 \text{ bytes}}{4\text{ byte}} = 256 \text{ index blocks} \implies 256^{3} * 1024 = 17\text{ GB}$$
+With three levels of index blocks we get a max filesize of $17$ GB
 
 \section*{Question 17.11}
 Describe how symbolic links could be implemented?
 \newline
+A symbolic link could be implemented as another type in the directory structure (regular/directory).
+The name would be whatever the link was named, the Allocation would be where the data about the link is stored and the size would just be one block.
+The block would contain the information about where the link points to and when something want to access it it will just follow this link instead.
+
 
 \end{document}
