@@ -89,8 +89,8 @@ Double-indirect pointers can be excessive for smaller files since you need to pe
 \section*{Question 17.9}
 If we have a three-level tree-structured allocation structure as in Figure 17-8, where each block is 1024 bytes and each block pointer is 4 bytes, how large is the largest file that can be represented?
 \newline
-$$ \frac{1024 \text{ bytes}}{4\text{ byte}} = 256 \text{ index blocks} \implies 256^{3} * 1024 = 17\text{ GB}$$
-With three levels of index blocks we get a max filesize of $17$ GB
+$$ \frac{1024 \text{ bytes}}{4\text{ byte}} = 256 \text{ index blocks} \implies 256^{3} * 1024 = 16\text{ GB}$$
+With three levels of index blocks we get a max filesize of $16$ GB
 
 \section*{Question 17.11}
 Describe how symbolic links could be implemented?
