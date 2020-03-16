@@ -1,0 +1,5 @@
+Implemented assignment as described. Two files are available in '#R', 'data' and 'ctl'
+
+Files modified:
+emu/port/devraid.c
+emu/Linux/emu
