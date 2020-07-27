@@ -2,6 +2,7 @@
 
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
+\usepackage{amsmath}
 
 \lstset{
     basicstyle=\ttfamily,
@@ -19,46 +20,82 @@
 % Exercises: Page 259
 \section*{Question 9.1}
 Suppose we have a hardware segmentation system like that shown in Figure 9-3 where the base and limit tables have eight entries.
-Base register $i$ (numbered from 0) contains the value $i\times 2^{10} + 0\text{x}100$ and each limit register contains the hexadecimal value $0\text{x}200$.
-If the 16-bit virtual address is $0\text{x}605\teax{f}$, then what physical address is computed?
+Base register $i$ (numbered from 0) contains the value $i\times 2^{10} + 0x100$ and each limit register contains the hexadecimal value $0x200$.
+If the 16-bit virtual address is $0x605f$, then what physical address is computed?
 Does the address generate a fault?
+\newline
+\newline
+Entry: 110 = 6 \\
+Base register: $6\times 2^{10}+0x100 = 0x1800$ \\
+Address: 0x5f $<$ 0x200 no fault generated \\
+Physical address = 0x185f
+
 
 \section*{Question 9.6}
 Consider a system with 64-bit addressing. If the page size is 64 KB, how many levels must the paging system have so that each table fits within one page? (Take the PTE size to be 8 bytes.)
+\newline
+\newline
+Page size of 64KB, the offset of the virtual address is 16 bits so we have 48bits left. Therefore we need 6 tables.
 
 \section*{Question 9.7}
 If we have a machine with a 32-bit virtual address and a 1-KB page size, then how many pages are in the virtual address space?
 If each PTE takes 4 bytes, then how many pages are required to hold a complete page table?
 If the physical address space is 256 MB, then how many bits are needed for the page frame number (PFN) in the PTE?
+\newline
+\newline
+32 bits - 10 bits = 22 bits used for virtual addresses. $2^{22} = $ 0x400000 or 524KB. \\
+256 pages are required to held the complete page table.
+
 
 \section*{Question 9.11}
 Most of the examples we have studied use the paging system to map a large virtual address space onto a smaller physical space.
 Could it be useful to map a small virtual space to a larger physical space?
 Why or why not?
+\newline
+\newline
+Yes, if not all memory locations are valid due to some hardware limitations then mapping the virtual address space to a valid region.
 
 \section*{Question 9.12}
 Does using paged memory management hardware have any value even if we never swap pages to disk and back?
+Can still use the Protection bits, present bit, dirty bit, and accessed bit without actually swapping the pages to disk.
 
 \section*{Question 9.14}
 If memory access time is 70 nS and disk access time is 12 mS, then what is the maximum fraction of memory accesses that can generate page faults and maintain an expected memory access time of no more than 100nS?
+$100 = 70 + p12000000 \implies p = \frac{30}{12000000} = .0000025$
 
 \section*{Question 9.16}
-Suppose that for a given ob, Belady's min would result in a $99.99\%$ hit rate, that memory access time is 70 nS, and that disk access time is 12mS.
+Suppose that for a given job, Belady's min would result in a $99.99\%$ hit rate, that memory access time is 70 nS, and that disk access time is 12mS.
 If NFU results in $20\%$ more page faults than Belady's min, and second chance results in $30\%$ more than Belady's min, how much is the average access time degraded for each of these page replacement policies?
+\newline
+\newline
+NFU: $(1.2*.0001)*12000 = 1.44ns$ \\
+Second chance: $(1.3*.0001)*12000 = 1.56ns$
+
 
 \section*{Question 9.19}
 Most systems don't swap out pages that are part of a read-only text segment because they can be reread from the original executable file.
 Would there be any advantage to doing so?
+\newline
+\newline
+If the read-only section is used once then it's page entry will not be replaced then it could slow down future requests since there are less valid pages.
 
 % Exercises: Page 307
 \section*{Question 11.2}
-What constrains the value of the quanta member of the \bold{Pool} structure? Could we make it smaller than 31?
+What constrains the value of the quanta member of the Pool structure? Could we make it smaller than 31?
 If so, how small?
 If not, why not?
+\newline
+\newline
+It must be of size $2^q-1$ where $2^q$ is the minimum allocation size therefore the minimum is achieved when using $q=0$.
+Which gives us a minimum size of quanta of $2^0-1=0$. This would allow programs to be assigned one address at a time and not be blocked out into larger chunks. 
 
 \section*{Question 11.4}
 When adding a block back to the free tree for a pool, we check to see if adjacent blocks are also free and coalesce them if they are.
 Is it possible that we might accidentally coalesce free blocks belonging to different pools in this way?
 Why or why not?
+\newline
+\newline
+No because each free block that is found in the list of free blocks belong to the same pool. Freeing the block should not move it to a new pool removing the opportunity of mixing blocks from other pools.
+
 
 \end{document}
